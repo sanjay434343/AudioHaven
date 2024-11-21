@@ -1,0 +1,279 @@
+:root { 
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --color-primary: #bb86fc;
+    --color-secondary: #03dac6;
+    --text-primary: #ffffff;
+    --text-secondary: #bbbbbb;
+    --border-radius: 12px;
+    --shadow-subtle: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-medium: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-subtle);
+}
+
+header h1 {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 1000;
+
+}
+
+header p {
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    flex: 1;
+}
+
+/* Dropbox Grid */
+#canvas {
+    background-color: var(--bg-secondary);
+    border: 2px dashed var(--color-secondary);
+    border-radius: var(--border-radius);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#canvas::-webkit-scrollbar {
+    width: 8px;
+}
+
+#canvas::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#canvas::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 4px;
+}
+
+/* Sound Elements Container */
+#elements {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: var(--shadow-medium);
+}
+
+#elements::-webkit-scrollbar {
+    width: 8px;
+}
+
+#elements::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#elements::-webkit-scrollbar-thumb {
+    background-color: var(--color-secondary);
+    border-radius: 4px;
+}
+
+/* Sound Card Styling */
+.sound {
+    background-color: var(--bg-primary);
+    border: 2px solid var(--color-secondary);
+    color: var(--text-primary);
+    padding: 1rem;
+    text-align: center;
+    border-radius: var(--border-radius);
+    cursor: grab;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sound::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 0%, var(--color-secondary) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.sound:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.sound:hover::before {
+    opacity: 0.1;
+}
+
+.sound::after {
+    content: attr(data-sound);
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-secondary);
+    color: var(--bg-primary);
+    padding: 0.25rem;
+    transition: bottom 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.sound:hover::after {
+    bottom: 0;
+}
+
+/* Footer Styling */
+footer {
+    background-color: var(--bg-secondary);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+#stop {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#stop:hover {
+    background-color: #d32f2f;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+}
+
+/* Responsive Adjustments */
+@media screen and (min-width: 768px) {
+    main {
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    #canvas {
+        flex: 2;
+        max-height: 600px;
+    }
+
+    #elements {
+        flex: 1;
+        max-height: 600px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    main {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+/* Drag and Drop States */
+.sound.dragging {
+    opacity: 0.7;
+    transform: scale(0.95);
+    border-style: dashed;
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+.control-card {
+    border: 2px dashed var(--color-secondary);
+    width: 100%; /* Fixed size */
+    height: 80px; /* Fixed size */
+    background: #121212;
+    padding: 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures space between elements */
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+    cursor: grab;
+    flex: 1;
+    color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+}
+
+/* Prevent Control Overflow */
+.control-card input[type="range"] {
+    width: 100%;
+}
+
+.remove-btn{
+    padding: 5px;
+    position: relative;
+    border-radius: 2px;
+    margin: 5px;
+    bottom: 13px;
+    background-color: rgb(255, 117, 117);
+    color: white;
+}
+
+button{
+    background-color: transparent;
+    border: none;
+}
+
+input{
+    margin-top: -10px;
+}

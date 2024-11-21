@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Soundscape Builder - Grid Mode</title>
+  <link rel="stylesheet" href="styles.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1>Audio Haven</h1>
+    <p>Drag sounds onto the grid and create your custom soundscape.</p>
+  </header>
+  <main>
+    <section id="canvas" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+      <!-- Grid overlay -->
+    </section>
+    <aside id="elements">
+     
+      <div class="sound" data-sound="rain"><i class="fa-solid fa-cloud-rain"></i></div>
+      <div class="sound" data-sound="wind"><i class="fa-solid fa-wind"></i></div>
+      <div class="sound" data-sound="birdsong"><i class="fa-solid fa-dove"></i></div>
+      <div class="sound" data-sound="city"><i class="fa-solid fa-city"></i></div>
+      <div class="sound" data-sound="ocean"><i class="fa-solid fa-water"></i></div>
+      <div class="sound" data-sound="forest"><i class="fa-solid fa-tree"></i></div>
+      <div class="sound" data-sound="thunder"><i class="fa-solid fa-cloud-bolt"></i></div>
+      <div class="sound" data-sound="street"><i class="fa-solid fa-archway"></i></div>
+      <div class="sound" data-sound="fire"><i class="fa-solid fa-fire-flame-curved"></i></div>
+    </aside>
+  </main>
+  <footer>
+    <button id="stop"><i class="fa-solid fa-stop"></i></button>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
