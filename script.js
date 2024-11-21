@@ -22,6 +22,13 @@ const activeSounds = {};
 const gridSize = 100; // Size of each grid cell
 const itemSize = 80;  // Fixed size of dropped items
 
+// Helper function to play sound on user interaction
+function playSound(audio) {
+  audio.play().catch((err) => {
+    console.log('Autoplay blocked:', err);
+  });
+}
+
 // Drag-and-Drop Handlers
 function dragOverHandler(event) {
   event.preventDefault();
@@ -29,6 +36,7 @@ function dragOverHandler(event) {
 
 function dropHandler(event) {
   event.preventDefault();
+  
   const soundType = event.dataTransfer.getData('sound');
 
   // Get canvas bounding box to calculate relative positions
@@ -56,17 +64,13 @@ function createSoundControl(soundType, x, y) {
   const audio = new Audio(soundMap[soundType]);
   audio.loop = true;
 
-  // Set up a promise to handle the autoplay restriction on mobile
-  const playAudio = () => {
-    audio.play().catch((err) => {
-      console.log('Autoplay prevented, waiting for user interaction: ', err);
-    });
-  };
+  // Wait for user interaction to start playing sound
+  audio.addEventListener('play', () => {
+    activeSounds[soundType] = audio;
+  });
 
-  // Play the sound if the user interacted with the canvas
-  playAudio();
-
-  activeSounds[soundType] = audio;
+  // Set up a play function to be triggered after drop
+  playSound(audio);
 
   const controlCard = document.createElement('div');
   controlCard.className = 'control-card';
@@ -110,12 +114,6 @@ function createSoundControl(soundType, x, y) {
 sounds.forEach(sound => {
   sound.setAttribute('draggable', 'true');  // Make each sound element draggable
   sound.addEventListener('dragstart', event => {
-    event.dataTransfer.setData('sound', sound.dataset.sound);
-  });
-
-  // Mobile touch handling for drag and drop
-  sound.addEventListener('touchstart', event => {
-    event.preventDefault();
     event.dataTransfer.setData('sound', sound.dataset.sound);
   });
 });
