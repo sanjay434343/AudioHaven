@@ -12,8 +12,7 @@ const soundMap = {
   forest: 'forest.mp3',
   thunder: 'thunder.mp3',
   street: 'street.mp3',
-fire: 'fire.mp3',
-
+  fire: 'fire.mp3',
 };
 
 // Active Sounds
@@ -30,12 +29,10 @@ function dragOverHandler(event) {
 
 function dropHandler(event) {
   event.preventDefault();
-
   const soundType = event.dataTransfer.getData('sound');
 
   // Get canvas bounding box to calculate relative positions
   const canvasRect = canvas.getBoundingClientRect();
-
   let offsetX = event.clientX - canvasRect.left;
   let offsetY = event.clientY - canvasRect.top;
 
@@ -54,56 +51,66 @@ function dropHandler(event) {
 }
 
 function createSoundControl(soundType, x, y) {
-    if (activeSounds[soundType]) return; // Prevent duplicate sound types
+  if (activeSounds[soundType]) return; // Prevent duplicate sound types
 
-    const audio = new Audio(soundMap[soundType]);
-    audio.loop = true;
-    audio.play();
-    activeSounds[soundType] = audio;
+  const audio = new Audio(soundMap[soundType]);
+  audio.loop = true;
 
-    const controlCard = document.createElement('div');
-    controlCard.className = 'control-card';
-    controlCard.style.left = `${x}px`;
-    controlCard.style.top = `${y}px`;
-    controlCard.style.width = `${itemSize}px`;
-    controlCard.style.height = `${itemSize}px`;
+  // Play audio on user interaction for mobile compatibility
+  audio.play().catch(() => {
+    console.log('Autoplay prevented, sound will play after user interaction.');
+  });
 
-    // Display the sound name in the card
-    const soundName = document.createElement('div');
-    soundName.className = 'sound-name';
-    soundName.textContent = soundType.charAt(0).toUpperCase() + soundType.slice(1); // Capitalize the first letter of the sound name
-    controlCard.appendChild(soundName);
+  activeSounds[soundType] = audio;
 
-    const volumeSlider = document.createElement('input');
-    volumeSlider.type = 'range';
-    volumeSlider.min = 0;
-    volumeSlider.max = 1;
-    volumeSlider.step = 0.01;
-    volumeSlider.value = 1;
-    volumeSlider.addEventListener('input', () => {
-        audio.volume = volumeSlider.value;
-    });
+  const controlCard = document.createElement('div');
+  controlCard.className = 'control-card';
+  controlCard.style.left = `${x}px`;
+  controlCard.style.top = `${y}px`;
+  controlCard.style.width = `${itemSize}px`;
+  controlCard.style.height = `${itemSize}px`;
 
-    // Remove Button with Font Awesome icon
-    const removeButton = document.createElement('button');
-    removeButton.className = 'remove-btn';
-    removeButton.innerHTML = '<i class="fa-solid fa-trash"></i>'; // Trash icon for remove
-    removeButton.addEventListener('click', () => {
-        audio.pause();
-        controlCard.remove();
-        delete activeSounds[soundType];
-    });
+  // Display the sound name in the card
+  const soundName = document.createElement('div');
+  soundName.className = 'sound-name';
+  soundName.textContent = soundType.charAt(0).toUpperCase() + soundType.slice(1); // Capitalize the first letter of the sound name
+  controlCard.appendChild(soundName);
 
-    controlCard.appendChild(volumeSlider);
-    controlCard.appendChild(removeButton);
-    canvas.appendChild(controlCard);
+  const volumeSlider = document.createElement('input');
+  volumeSlider.type = 'range';
+  volumeSlider.min = 0;
+  volumeSlider.max = 1;
+  volumeSlider.step = 0.01;
+  volumeSlider.value = 1;
+  volumeSlider.addEventListener('input', () => {
+    audio.volume = volumeSlider.value;
+  });
+
+  // Remove Button with Font Awesome icon
+  const removeButton = document.createElement('button');
+  removeButton.className = 'remove-btn';
+  removeButton.innerHTML = '<i class="fa-solid fa-trash"></i>'; // Trash icon for remove
+  removeButton.addEventListener('click', () => {
+    audio.pause();
+    controlCard.remove();
+    delete activeSounds[soundType];
+  });
+
+  controlCard.appendChild(volumeSlider);
+  controlCard.appendChild(removeButton);
+  canvas.appendChild(controlCard);
 }
-
 
 // Attach dragstart event to each sound element
 sounds.forEach(sound => {
   sound.setAttribute('draggable', 'true');  // Make each sound element draggable
   sound.addEventListener('dragstart', event => {
+    event.dataTransfer.setData('sound', sound.dataset.sound);
+  });
+
+  // Mobile touch handling for drag and drop
+  sound.addEventListener('touchstart', event => {
+    event.preventDefault();
     event.dataTransfer.setData('sound', sound.dataset.sound);
   });
 });
