@@ -56,10 +56,15 @@ function createSoundControl(soundType, x, y) {
   const audio = new Audio(soundMap[soundType]);
   audio.loop = true;
 
-  // Play audio on user interaction for mobile compatibility
-  audio.play().catch(() => {
-    console.log('Autoplay prevented, sound will play after user interaction.');
-  });
+  // Set up a promise to handle the autoplay restriction on mobile
+  const playAudio = () => {
+    audio.play().catch((err) => {
+      console.log('Autoplay prevented, waiting for user interaction: ', err);
+    });
+  };
+
+  // Play the sound if the user interacted with the canvas
+  playAudio();
 
   activeSounds[soundType] = audio;
 
